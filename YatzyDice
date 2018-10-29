@@ -132,8 +132,13 @@ public class YatzyDice {
 	 * Pre: 1 <= value <= 6;
 	 */
 	public int sameValuePoints(int value) {
-		// TODO
-		return 0;
+		int sum;
+		int[] freq = frequency();
+		Pre.require(1 <= value && value <= 6);
+		sum = value * freq[value];
+
+		return sum;
+
 	}
 
 	/**
@@ -217,8 +222,28 @@ public class YatzyDice {
 	 * and 2 other dice with the same but different face value.
 	 */
 	public int fullHousePoints() {
-		// TODO
+		int points = 0;
+		int[] freq = frequency();
+		int par = 0;
+		for (int face = 6; face > 0; face--) {
+			if (freq[face] == 3) {
+				points += face * 3;
+				par++;
+
+			}
+			if (freq[face] == 2) {
+				points += face * 2;
+				par++;
+			}
+
+			if (par == 2) {
+				return points;
+
+			}
+
+		}
 		return 0;
+
 	}
 
 	/**
@@ -227,7 +252,20 @@ public class YatzyDice {
 	 */
 	public int smallStraightPoints() {
 		int points = 0;
+		int smallS = 0;
+		int[] freq = frequency();
+		for (int face = 1; face < 6; face++) {
+			if (freq[face] == 1) {
+				smallS++;
 
+			} else {
+				smallS = 0;
+			}
+			if (smallS == 5) {
+				points = 15;
+			}
+
+		}
 		return points;
 
 	}
@@ -237,8 +275,23 @@ public class YatzyDice {
 	 * Returns 0, if the dice are not showing 2,3,4,5,6.
 	 */
 	public int largeStraightPoints() {
-		// TODO
-		return 0;
+		int points = 0;
+		int LargeS = 0;
+		int[] freq = frequency();
+		for (int face = 2; face <= 6; face++) {
+			if (freq[face] == 1) {
+				LargeS++;
+
+			} else {
+				LargeS = 0;
+			}
+			if (LargeS == 5) {
+				points = 20;
+			}
+
+		}
+		return points;
+
 	}
 
 	/**
