@@ -1,0 +1,271 @@
+package model;
+
+import java.util.Random;
+
+public class YatzyDice {
+	// Face values of the 5 dice.
+	// 1 <= values[i] <= 6 for i in [0..5]
+	private int[] values = new int[5];
+
+	// Number of times the 5 dice have been thrown.
+	// 0 <= throwCount <= 3.
+	private int throwCount = 0;
+
+	// Random number generator.
+	private Random random = new Random();
+
+	/**
+	 * Returns the 5 face values of the dice.
+	 */
+	public int[] getValues() {
+		return values;
+	}
+
+	/**
+	 * Sets the 5 face values of the dice.<br/>
+	 * Pre: 1 <= values[i] <= 6 for i in [0..5].<br/>
+	 * Note: This method is only meant to be used in tests.
+	 */
+	void setValues(int[] values) {
+		this.values = values;
+	}
+
+	/**
+	 * Returns the number of times the 5 dice has been thrown.
+	 */
+	public int getThrowCount() {
+		return throwCount;
+	}
+
+	/**
+	 * Resets the throw count.
+	 */
+	public void resetThrowCount() {
+		throwCount = 0;
+	}
+
+	/**
+	 * Rolls the 5 dice. Only rolls dice that are not hold.<br/>
+	 * Note: holds[i] is true, if die no. i is hold.
+	 */
+	public void throwDice(boolean[] holds) {
+		int ThrowDice = random.nextInt(6) + 1;
+
+		int counter = 0;
+		int[] dice = new int[5];
+		while (throwCount < 2) {
+			while (counter < 5) {
+				dice[counter] = ThrowDice;
+				counter++;
+
+			}
+			while (counter < 5) {
+				if (holds[counter] == true) {
+					counter++;
+				} else
+					while (counter < 5) {
+						dice[counter] = ThrowDice;
+						counter++;
+
+					}
+
+			}
+		}
+		throwCount++;
+
+	}
+
+	// -------------------------------------------------------------------------
+
+	/**
+	 * Returns all results possible with the current face values.<br/>
+	 * The order of the results is the same as on the score board.<br/>
+	 * Note: This is an optional method. Comment this method out,<br/>
+	 * if you don't want use it.
+	 */
+	public int[] getResults() {
+		int[] results = new int[15];
+		for (int i = 0; i <= 5; i++) {
+			results[i] = this.sameValuePoints(i + 1);
+		}
+		results[6] = this.onePairPoints();
+		results[7] = this.twoPairPoints();
+		results[8] = this.threeSamePoints();
+		results[9] = this.fourSamePoints();
+		results[10] = this.fullHousePoints();
+		results[11] = this.smallStraightPoints();
+		results[12] = this.largeStraightPoints();
+		results[13] = this.chancePoints();
+		results[14] = this.yatzyPoints();
+
+		return results;
+	}
+
+	// -------------------------------------------------------------------------
+
+	// Returns an int[7] containing the frequency of face values.
+	// Frequency at index v is the number of dice with the face value v, 1 <= v <=
+	// 6.
+	// Index 0 is not used.
+	// Note: This method can be used in several of the following methods.
+	private int[] frequency() {
+		int[] freq = new int[7];
+		int counter = 0;
+		int i = 1;
+		while (i < 7) {
+			while (counter < 5) {
+				if (this.values[counter] == i) {
+					freq[i] += 1;
+				}
+				counter++;
+			}
+			i++;
+			counter = 0;
+		}
+
+		return freq;
+	}
+
+	/**
+	 * Returns same-value points for the given face value.<br/>
+	 * Returns 0, if no dice has the given face value.<br/>
+	 * Pre: 1 <= value <= 6;
+	 */
+	public int sameValuePoints(int value) {
+		// TODO
+		return 0;
+	}
+
+	/**
+	 * Returns points for one pair (for the face value giving highest points).<br/>
+	 * Returns 0, if there aren't 2 dice with the same face value.
+	 */
+	public int onePairPoints() {
+		int points = 0;
+		int[] freq = frequency();
+		for (int face = 6; face > 0; face--) {
+			if (freq[face] >= 2) {
+				points = face * 2;
+				break;
+			}
+		}
+		return points;
+
+	}
+
+	/**
+	 * Returns points for two pairs<br/>
+	 * (for the 2 face values giving highest points).<br/>
+	 * Returns 0, if there aren't 2 dice with the same face value<br/>
+	 * and 2 other dice with the same but different face value.
+	 */
+	public int twoPairPoints() {
+		int points = 0;
+		int[] freq = frequency();
+		int par = 0;
+		for (int face = 6; face > 0; face--) {
+			if (freq[face] >= 2) {
+				points += face * 2;
+				par++;
+
+			}
+			if (par == 2) {
+				return points;
+
+			}
+
+		}
+		return 0;
+
+	}
+
+	/**
+	 * Returns points for 3 of a kind.<br/>
+	 * Returns 0, if there aren't 3 dice with the same face value.
+	 */
+	public int threeSamePoints() {
+		int points = 0;
+		int[] freq = frequency();
+		for (int face = 1; face <= 6; face++) {
+			if (freq[face] >= 3) {
+				points = face * 3;
+			}
+		}
+		return points;
+
+	}
+
+	/**
+	 * Returns points for 4 of a kind.<br/>
+	 * Returns 0, if there aren't 4 dice with the same face value.
+	 */
+	public int fourSamePoints() {
+		int points = 0;
+		int[] freq = frequency();
+		for (int face = 1; face <= 6; face++) {
+			if (freq[face] >= 4) {
+				points = face * 4;
+			}
+		}
+		return points;
+
+	}
+
+	/**
+	 * Returns points for full house.<br/>
+	 * Returns 0, if there aren't 3 dice with the same face value<br/>
+	 * and 2 other dice with the same but different face value.
+	 */
+	public int fullHousePoints() {
+		// TODO
+		return 0;
+	}
+
+	/**
+	 * Returns points for small straight.<br/>
+	 * Returns 0, if the dice are not showing 1,2,3,4,5.
+	 */
+	public int smallStraightPoints() {
+		int points = 0;
+
+		return points;
+
+	}
+
+	/**
+	 * Returns points for large straight.<br/>
+	 * Returns 0, if the dice are not showing 2,3,4,5,6.
+	 */
+	public int largeStraightPoints() {
+		// TODO
+		return 0;
+	}
+
+	/**
+	 * Returns points for chance (the sum of face values).
+	 */
+	public int chancePoints() {
+		int points = 0;
+		for (int faceV : values) {
+			points += faceV;
+		}
+
+		return points;
+	}
+
+	/**
+	 * Returns points for yatzy (50 points).<br/>
+	 * Returns 0, if there aren't 5 dice with the same face value.
+	 */
+	public int yatzyPoints() {
+		int points = 0;
+		for (int num : frequency()) {
+			if (num == 5) {
+				points = 50;
+			}
+
+		}
+		return points;
+
+	}
+}
