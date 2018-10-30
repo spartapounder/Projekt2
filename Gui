@@ -1,0 +1,310 @@
+package gui;
+
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Region;
+import javafx.stage.Stage;
+import model.YatzyDice;
+
+public class MainApp extends Application {
+	private final Controller controller = new Controller();
+
+	public static void main(String[] args) {
+		Application.launch(args);
+
+	}
+
+	@Override
+	public void start(Stage stage) {
+		stage.setTitle("The Game Of Yatzy");
+		GridPane pane = new GridPane();
+		gameOfYatzy(pane);
+		Scene scene = new Scene(pane, 450, 800);
+		stage.setScene(scene);
+		stage.setResizable(false);
+		stage.show();
+	}
+
+	// -------------------------------------------------------------------------
+
+	// Shows the face values of the 5 dice.
+	private final TextField[] txfValues = new TextField[5];
+	// Shows the hold status of the 5 dice.
+	private final CheckBox[] cbxHolds = new CheckBox[5];
+	// Shows the obtained results.
+	// For results not set yet, the possible result of
+	// the actual face values of the 5 dice are shown.
+	private final TextField[] txfResults = new TextField[16];
+	// Shows points in sums, bonus and total.
+	private final TextField txfSumSame = new TextField(), txfBonus = new TextField(), txfSumOther = new TextField(),
+			txfTotal = new TextField();
+
+	private final Label lblCounter = new Label("Tmies Rolled: 0");
+	private final Button btnRoll = new Button(" Roll ");
+
+	private void gameOfYatzy(GridPane pane) {
+
+		boolean truen = false;
+		pane.setGridLinesVisible(truen);
+		pane.setPadding(new Insets(10));
+		pane.setHgap(10);
+		pane.setVgap(10);
+
+		// ---------------------------------------------------------------------
+
+		GridPane dicePane = new GridPane();
+		pane.add(dicePane, 0, 0);
+		dicePane.setGridLinesVisible(truen);
+		dicePane.setPadding(new Insets(20));
+		dicePane.setHgap(10);
+		dicePane.setVgap(10);
+		dicePane.setStyle("-fx-border-color: black");
+
+		for (int i = 0; i < 5; i++) {
+
+			txfValues[i] = new TextField();
+			dicePane.add(txfValues[i], 1 + i, 0);
+			txfValues[i].setStyle("-fx-font-size: 16pt");
+			txfValues[i].setPadding(new Insets(10));
+			txfValues[i].setPrefWidth(70);
+			txfValues[i].setPrefHeight(70);
+			txfValues[i].setMaxWidth(70);
+			txfValues[i].setEditable(false);
+
+			if (i == 0) {
+				txfValues[i].setText("Y");
+			}
+			if (i == 1) {
+				txfValues[i].setText("A");
+			}
+			if (i == 2) {
+				txfValues[i].setText("T");
+			}
+			if (i == 3) {
+				txfValues[i].setText("Z");
+			}
+			if (i == 4) {
+				txfValues[i].setText("Y");
+			}
+
+		}
+
+		// String txfText[] = new String[] { "Y", "A", "T", "Z", "Y" };
+		//
+		// for (int i = 0; i < 5; i++) {
+		// this.txfValues[i] = TextField(txfText[i]);
+		// dicePane.add(this.txfValues[i], 1 + i, 0);
+		// }
+
+		for (int i = 0; i < 5; i++) {
+			cbxHolds[i] = new CheckBox();
+			dicePane.add(cbxHolds[i], 1 + i, 1);
+			cbxHolds[i].setText("hold");
+
+		}
+
+		dicePane.add(lblCounter, 1, 2, 3, 2);
+
+		dicePane.add(btnRoll, 4, 2, 3, 2);
+		btnRoll.setOnAction(event -> controller.rollAction());
+		btnRoll.requestFocus();
+
+		// add txfValues, chbHolds, lblCountet and btnRoll
+		// TODO
+
+		// ---------------------------------------------------------------------
+
+		GridPane scorePane = new GridPane();
+		pane.add(scorePane, 0, 1);
+		scorePane.setGridLinesVisible(truen);
+		scorePane.setPadding(new Insets(10));
+		scorePane.setVgap(5);
+		scorePane.setHgap(10);
+		scorePane.setStyle("-fx-border-color: black");
+		int w = 50; // width of the text fields
+
+		for (int i = 0; i < 16; i++) {
+			txfResults[i] = new TextField();
+			scorePane.add(txfResults[i], 1, i);
+			txfResults[i].setPrefWidth(w);
+			txfResults[i].setEditable(false);
+			txfResults[i].setOnMouseClicked(event -> controller.mouseClicked(event));
+
+			if (i == 5) {
+				Region r = new Region();
+				scorePane.add(r, 0, i);
+				i++;
+			}
+
+		}
+
+		Label lblResults[] = new Label[16];
+		String lbl[] = new String[] { "1-s", "2-s", "3-s", "4-s", "5-s", "6-s", "", "One Pair", "Two Pair",
+				"Three-same", "Four-same", "Full House", "Small Str.", "Large Str.", "Chance", "Yatzy" };
+
+		for (int i = 0; i < 16; i++) {
+			lblResults[i] = new Label(lbl[i]);
+			scorePane.add(lblResults[i], 0, i);
+
+		}
+
+		scorePane.add(txfBonus, 3, 5);
+		txfBonus.setPrefWidth(w);
+		txfBonus.setEditable(false);
+		txfBonus.setText("0");
+
+		Label lblBonus = new Label("Bonus");
+		scorePane.add(lblBonus, 2, 5);
+
+		scorePane.add(txfSumSame, 3, 6);
+		txfSumSame.setPrefWidth(w);
+		txfSumSame.setEditable(false);
+
+		Label lblSumSame = new Label("Sum");
+		scorePane.add(lblSumSame, 2, 6);
+
+		// ---- //
+
+		scorePane.add(txfSumOther, 3, 15);
+		txfSumOther.setPrefWidth(w);
+		txfSumOther.setEditable(false);
+		txfSumOther.setText("0");
+
+		Label lblSumOther = new Label("Sum");
+		scorePane.add(lblSumOther, 2, 15);
+
+		scorePane.add(txfTotal, 3, 16);
+		txfTotal.setPrefWidth(w);
+		txfTotal.setEditable(false);
+		txfTotal.setText("0");
+		Label lblTotal = new Label("Total");
+		scorePane.add(lblTotal, 2, 16);
+		// add labels for results, add txfResults,
+		// add labels and text fields for sums, bonus and total.
+		// TODO
+
+	}
+
+	// -------------------------------------------------------------------------
+
+	private class Controller {
+		private YatzyDice dice = new YatzyDice();
+		boolean[] txfOfResults = new boolean[15];
+
+		public void rollAction() {
+			boolean[] holds = new boolean[5];
+
+			if (dice.getThrowCount() < 3) {
+
+				for (int i = 0; i < 5; i++) {
+					holds[i] = cbxHolds[i].isSelected();
+					if (cbxHolds[i].isSelected()) {
+						cbxHolds[i].setDisable(true);
+					}
+				}
+
+				dice.throwDice(holds);
+
+			}
+			int[] values = dice.getValues();
+			for (int i = 0; i < 5; i++) {
+				txfValues[i].setText(values[i] + "");
+			}
+
+			for (int i = 0; i < 6; i++) {
+				txfResults[i].setText("" + dice.sameValuePoints(i + 1));
+			}
+
+			txfResults[7].setText("" + dice.onePairPoints());
+			txfResults[8].setText("" + dice.twoPairPoints());
+			txfResults[9].setText("" + dice.threeSamePoints());
+			txfResults[10].setText("" + dice.fourSamePoints());
+			txfResults[11].setText("" + dice.fullHousePoints());
+			txfResults[12].setText("" + dice.smallStraightPoints());
+			txfResults[13].setText("" + dice.largeStraightPoints());
+			txfResults[14].setText("" + dice.chancePoints());
+			txfResults[15].setText("" + dice.yatzyPoints());
+
+			lblCounter.setText("Times Rolled " + dice.getThrowCount());
+
+		}
+
+		// public
+
+		public void clearHolds() {
+			for (CheckBox cbx : cbxHolds) {
+				cbx.setSelected(false);
+				cbx.setDisable(false);
+				dice.getThrowCount();
+			}
+		}
+
+		// -------------------------------------------------------------------------
+
+		public void mouseClicked(MouseEvent event) {
+			TextField txf = (TextField) event.getSource();
+			for (int i = 0; i < 16; i++) {
+				if (txf == txfResults[i]) {
+					if (i < 6) {
+						String bonus = txfBonus.getText();
+						String resultSS = txfResults[i].getText();
+						int bonusI = Integer.parseInt(bonus);
+						int bonusII = Integer.parseInt(resultSS);
+						int finalbonus = bonusI + bonusII;
+						String finalbonusS = Integer.toString(finalbonus);
+
+						txfBonus.setText(finalbonusS);
+					}
+
+					String resultS = txfResults[i].getText();
+					String TotalS = txfTotal.getText();
+					int resultI = Integer.parseInt(resultS);
+					int TotalI = Integer.parseInt(TotalS);
+					int finalResultI = resultI + TotalI;
+					String finalResultS = Integer.toString(finalResultI);
+					txfTotal.setText(finalResultS);
+					txf.setStyle("-fx-background-color: GREEN");
+					txfResults[i].setEditable(false);
+					txfResults[i].setMouseTransparent(true);
+					txfResults[i].setFocusTraversable(false);
+					String BonusS = txfBonus.getText();
+					int BonusI = Integer.parseInt(BonusS);
+					if (BonusI >= 63) {
+						txfSumSame.setText("50");
+						int bonusTotal = finalResultI + 50;
+						String BonusTotalS = Integer.toString(bonusTotal);
+						txfTotal.setText(BonusTotalS);
+
+					}
+					if (i > 6) {
+						String SumS = txfSumOther.getText();
+						int SumI = Integer.parseInt(SumS);
+						int finalSumI = resultI + SumI;
+						String finalSumS = Integer.toString(finalSumI);
+						txfSumOther.setText(finalSumS);
+
+					}
+				}
+
+			}
+
+			dice.resetThrowCount();
+
+			clearHolds();
+
+			rollAction();
+		}
+	}
+
+// Create a method for mouse click on one of the text fields in txfResults.
+// Hint: Create small helper methods to be used in the mouse click method.
+// TODO
+
+}
