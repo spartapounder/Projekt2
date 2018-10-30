@@ -117,7 +117,6 @@ public class MainApp extends Application {
 		btnRoll.requestFocus();
 
 		// add txfValues, chbHolds, lblCountet and btnRoll
-		// TODO
 
 		// ---------------------------------------------------------------------
 
@@ -188,7 +187,7 @@ public class MainApp extends Application {
 		scorePane.add(lblTotal, 2, 16);
 		// add labels for results, add txfResults,
 		// add labels and text fields for sums, bonus and total.
-		// TODO
+		//
 
 	}
 
@@ -196,7 +195,6 @@ public class MainApp extends Application {
 
 	private class Controller {
 		private YatzyDice dice = new YatzyDice();
-		boolean[] txfOfResults = new boolean[15];
 
 		public void rollAction() {
 			boolean[] holds = new boolean[5];
@@ -308,6 +306,5 @@ public class MainApp extends Application {
 
 // Create a method for mouse click on one of the text fields in txfResults.
 // Hint: Create small helper methods to be used in the mouse click method.
-// TODO
 
 }
