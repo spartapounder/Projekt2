@@ -250,56 +250,59 @@ public class MainApp extends Application {
 
 		public void mouseClicked(MouseEvent event) {
 			TextField txf = (TextField) event.getSource();
-			for (int i = 0; i < 16; i++) {
-				if (txf == txfResults[i]) {
-					if (i < 6) {
-						String bonus = txfBonus.getText();
-						String resultSS = txfResults[i].getText();
-						int bonusI = Integer.parseInt(bonus);
-						int bonusII = Integer.parseInt(resultSS);
-						int finalbonus = bonusI + bonusII;
-						String finalbonusS = Integer.toString(finalbonus);
+			if (dice.getThrowCount() == 3) {
+				for (int i = 0; i < 16; i++) {
+					if (txf == txfResults[i]) {
+						if (i < 6) {
+							String bonus = txfBonus.getText();
+							String resultSS = txfResults[i].getText();
+							int bonusI = Integer.parseInt(bonus);
+							int bonusII = Integer.parseInt(resultSS);
+							int finalbonus = bonusI + bonusII;
+							String finalbonusS = Integer.toString(finalbonus);
 
-						txfBonus.setText(finalbonusS);
+							txfBonus.setText(finalbonusS);
+						}
+
+						String resultS = txfResults[i].getText();
+						String TotalS = txfTotal.getText();
+						int resultI = Integer.parseInt(resultS);
+						int TotalI = Integer.parseInt(TotalS);
+						int finalResultI = resultI + TotalI;
+						String finalResultS = Integer.toString(finalResultI);
+						txfTotal.setText(finalResultS);
+						txf.setStyle("-fx-background-color: FORESTGREEN");
+						txfResults[i].setEditable(false);
+						txfResults[i].setMouseTransparent(true);
+						txfResults[i].setFocusTraversable(false);
+						String BonusS = txfBonus.getText();
+						int BonusI = Integer.parseInt(BonusS);
+						if (BonusI >= 63) {
+							txfSumSame.setText("50");
+							int bonusTotal = finalResultI + 50;
+							String BonusTotalS = Integer.toString(bonusTotal);
+							txfTotal.setText(BonusTotalS);
+
+						}
+						if (i > 6) {
+							String SumS = txfSumOther.getText();
+							int SumI = Integer.parseInt(SumS);
+							int finalSumI = resultI + SumI;
+							String finalSumS = Integer.toString(finalSumI);
+							txfSumOther.setText(finalSumS);
+
+						}
 					}
 
-					String resultS = txfResults[i].getText();
-					String TotalS = txfTotal.getText();
-					int resultI = Integer.parseInt(resultS);
-					int TotalI = Integer.parseInt(TotalS);
-					int finalResultI = resultI + TotalI;
-					String finalResultS = Integer.toString(finalResultI);
-					txfTotal.setText(finalResultS);
-					txf.setStyle("-fx-background-color: GREEN");
-					txfResults[i].setEditable(false);
-					txfResults[i].setMouseTransparent(true);
-					txfResults[i].setFocusTraversable(false);
-					String BonusS = txfBonus.getText();
-					int BonusI = Integer.parseInt(BonusS);
-					if (BonusI >= 63) {
-						txfSumSame.setText("50");
-						int bonusTotal = finalResultI + 50;
-						String BonusTotalS = Integer.toString(bonusTotal);
-						txfTotal.setText(BonusTotalS);
-
-					}
-					if (i > 6) {
-						String SumS = txfSumOther.getText();
-						int SumI = Integer.parseInt(SumS);
-						int finalSumI = resultI + SumI;
-						String finalSumS = Integer.toString(finalSumI);
-						txfSumOther.setText(finalSumS);
-
-					}
 				}
 
+				dice.resetThrowCount();
+
+				clearHolds();
+
+				rollAction();
 			}
 
-			dice.resetThrowCount();
-
-			clearHolds();
-
-			rollAction();
 		}
 	}
 
