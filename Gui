@@ -45,6 +45,7 @@ public class MainApp extends Application {
 	// Shows points in sums, bonus and total.
 	private final TextField txfSumSame = new TextField(), txfBonus = new TextField(), txfSumOther = new TextField(),
 			txfTotal = new TextField();
+	private int bonuscounter = 0;
 
 	private final Label lblCounter = new Label("Tmies Rolled: 0");
 	private final Button btnRoll = new Button(" Roll ");
@@ -247,6 +248,7 @@ public class MainApp extends Application {
 		// -------------------------------------------------------------------------
 
 		public void mouseClicked(MouseEvent event) {
+
 			TextField txf = (TextField) event.getSource();
 			if (dice.getThrowCount() == 3) {
 				for (int i = 0; i < 16; i++) {
@@ -275,11 +277,12 @@ public class MainApp extends Application {
 						txfResults[i].setFocusTraversable(false);
 						String BonusS = txfBonus.getText();
 						int BonusI = Integer.parseInt(BonusS);
-						if (BonusI >= 63) {
+						if (BonusI >= 63 && bonuscounter == 0) {
 							txfSumSame.setText("50");
 							int bonusTotal = finalResultI + 50;
 							String BonusTotalS = Integer.toString(bonusTotal);
 							txfTotal.setText(BonusTotalS);
+							bonuscounter++;
 
 						}
 						if (i > 6) {
