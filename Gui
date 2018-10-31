@@ -9,7 +9,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import model.YatzyDice;
 
@@ -41,7 +40,7 @@ public class MainApp extends Application {
 	// Shows the obtained results.
 	// For results not set yet, the possible result of
 	// the actual face values of the 5 dice are shown.
-	private final TextField[] txfResults = new TextField[16];
+	private final TextField[] txfResults = new TextField[15];
 	// Shows points in sums, bonus and total.
 	private final TextField txfSumSame = new TextField(), txfBonus = new TextField(), txfSumOther = new TextField(),
 			txfTotal = new TextField();
@@ -130,26 +129,20 @@ public class MainApp extends Application {
 		scorePane.setStyle("-fx-border-color: black");
 		int w = 50; // width of the text fields
 
-		for (int i = 0; i < 16; i++) {
+		for (int i = 0; i < 15; i++) {
 			txfResults[i] = new TextField();
 			scorePane.add(txfResults[i], 1, i);
 			txfResults[i].setPrefWidth(w);
 			txfResults[i].setEditable(false);
 			txfResults[i].setOnMouseClicked(event -> controller.mouseClicked(event));
 
-			if (i == 5) {
-				Region r = new Region();
-				scorePane.add(r, 0, i);
-				i++;
-			}
-
 		}
 
-		Label lblResults[] = new Label[16];
-		String lbl[] = new String[] { "1-s", "2-s", "3-s", "4-s", "5-s", "6-s", "", "One Pair", "Two Pair",
-				"Three-same", "Four-same", "Full House", "Small Str.", "Large Str.", "Chance", "Yatzy" };
+		Label lblResults[] = new Label[15];
+		String lbl[] = new String[] { "1-s", "2-s", "3-s", "4-s", "5-s", "6-s", "One Pair", "Two Pair", "Three-same",
+				"Four-same", "Full House", "Small Str.", "Large Str.", "Chance", "Yatzy" };
 
-		for (int i = 0; i < 16; i++) {
+		for (int i = 0; i < 15; i++) {
 			lblResults[i] = new Label(lbl[i]);
 			scorePane.add(lblResults[i], 0, i);
 
@@ -172,20 +165,20 @@ public class MainApp extends Application {
 
 		// ---- //
 
-		scorePane.add(txfSumOther, 3, 15);
+		scorePane.add(txfSumOther, 3, 14);
 		txfSumOther.setPrefWidth(w);
 		txfSumOther.setEditable(false);
 		txfSumOther.setText("0");
 
 		Label lblSumOther = new Label("Sum");
-		scorePane.add(lblSumOther, 2, 15);
+		scorePane.add(lblSumOther, 2, 14);
 
-		scorePane.add(txfTotal, 3, 16);
+		scorePane.add(txfTotal, 3, 15);
 		txfTotal.setPrefWidth(w);
 		txfTotal.setEditable(false);
 		txfTotal.setText("0");
 		Label lblTotal = new Label("Total");
-		scorePane.add(lblTotal, 2, 16);
+		scorePane.add(lblTotal, 2, 15);
 		// add labels for results, add txfResults,
 		// add labels and text fields for sums, bonus and total.
 		//
@@ -197,7 +190,7 @@ public class MainApp extends Application {
 	private class Controller {
 
 		private YatzyDice dice = new YatzyDice();
-		private boolean[] selected = new boolean[16];
+		private boolean[] selected = new boolean[15];
 
 		public void rollAction() {
 			boolean[] holds = new boolean[5];
@@ -222,11 +215,7 @@ public class MainApp extends Application {
 
 			for (int i = 0; i < results.length; i++) {
 
-				if (i == 6) {
-					i++;
-				}
 				if (selected[i] == true) {
-					break;
 
 				} else {
 					txfResults[i].setText("" + results[i]);
@@ -253,7 +242,7 @@ public class MainApp extends Application {
 
 			TextField txf = (TextField) event.getSource();
 			if (dice.getThrowCount() == 3) {
-				for (int i = 0; i < 16; i++) {
+				for (int i = 0; i < 15; i++) {
 					if (txf == txfResults[i]) {
 						if (i < 6) {
 							String bonus = txfBonus.getText();
