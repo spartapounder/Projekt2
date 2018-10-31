@@ -160,14 +160,14 @@ public class MainApp extends Application {
 		txfBonus.setEditable(false);
 		txfBonus.setText("0");
 
-		Label lblBonus = new Label("Bonus");
+		Label lblBonus = new Label("Sum");
 		scorePane.add(lblBonus, 2, 5);
 
 		scorePane.add(txfSumSame, 3, 6);
 		txfSumSame.setPrefWidth(w);
 		txfSumSame.setEditable(false);
 
-		Label lblSumSame = new Label("Sum");
+		Label lblSumSame = new Label("Bonus");
 		scorePane.add(lblSumSame, 2, 6);
 
 		// ---- //
@@ -195,7 +195,9 @@ public class MainApp extends Application {
 	// -------------------------------------------------------------------------
 
 	private class Controller {
+
 		private YatzyDice dice = new YatzyDice();
+		private boolean[] selected = new boolean[16];
 
 		public void rollAction() {
 			boolean[] holds = new boolean[5];
@@ -213,26 +215,26 @@ public class MainApp extends Application {
 
 			}
 			int[] values = dice.getValues();
+			int[] results = dice.getResults();
 			for (int i = 0; i < 5; i++) {
 				txfValues[i].setText(values[i] + "");
 			}
 
-			for (int i = 0; i < 6; i++) {
-				txfResults[i].setText("" + dice.sameValuePoints(i + 1));
+			for (int i = 0; i < results.length; i++) {
+
+				if (i == 6) {
+					i++;
+				}
+				if (selected[i] == true) {
+					break;
+
+				} else {
+					txfResults[i].setText("" + results[i]);
+				}
+
+				lblCounter.setText("Times Rolled " + dice.getThrowCount());
+
 			}
-
-			txfResults[7].setText("" + dice.onePairPoints());
-			txfResults[8].setText("" + dice.twoPairPoints());
-			txfResults[9].setText("" + dice.threeSamePoints());
-			txfResults[10].setText("" + dice.fourSamePoints());
-			txfResults[11].setText("" + dice.fullHousePoints());
-			txfResults[12].setText("" + dice.smallStraightPoints());
-			txfResults[13].setText("" + dice.largeStraightPoints());
-			txfResults[14].setText("" + dice.chancePoints());
-			txfResults[15].setText("" + dice.yatzyPoints());
-
-			lblCounter.setText("Times Rolled " + dice.getThrowCount());
-
 		}
 
 		// public
@@ -263,7 +265,7 @@ public class MainApp extends Application {
 
 							txfBonus.setText(finalbonusS);
 						}
-
+						selected[i] = true;
 						String resultS = txfResults[i].getText();
 						String TotalS = txfTotal.getText();
 						int resultI = Integer.parseInt(resultS);
