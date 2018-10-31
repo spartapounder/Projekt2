@@ -107,6 +107,7 @@ public class MainApp extends Application {
 			cbxHolds[i] = new CheckBox();
 			dicePane.add(cbxHolds[i], 1 + i, 1);
 			cbxHolds[i].setText("hold");
+			cbxHolds[i].setDisable(true);
 
 		}
 
@@ -205,6 +206,9 @@ public class MainApp extends Application {
 				}
 
 				dice.throwDice(holds);
+				for (int i = 0; i < 5; i++) {
+					cbxHolds[i].setDisable(false);
+				}
 
 			}
 			int[] values = dice.getValues();
